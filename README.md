@@ -19,7 +19,7 @@
   ## Usage
 
   Users can utilize this program to quickly generate a team profile page. 
-  [Application walkthrough demonstration](https://drive.google.com/file/d/1EnVtWii7Pg9bEgIc5QL2RoVCjMlDkMEn/view)
+  [Application walkthrough demonstration](https://drive.google.com/file/d/1d9I_L-pSeAP20WhEB3a6VTFhqrGVkTYN/view?usp=sharing)
 
   ## Questions
 
