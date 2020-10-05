@@ -6,15 +6,15 @@ const createEmployeeCard = employee => {
         extraValue = employee.getOffice();
     } else if (employee.getRole() === "Engineer") {
         extraType = "Github";
-        extraValue = `<a href='https://github.com/${employee.getGithub()}'>${employee.getGithub()}</a>`;
+        extraValue = `<a href='https://github.com/${employee.getGithub()}' target="_blank">${employee.getGithub()}</a>`;
     } else if (employee.getRole() === "Intern") {
         extraType = "School";
         extraValue = employee.getSchool();
     }
 
     let card = `
-    <div class='col-sm-12 col-md-6 col-lg-3 h-100'>
-        <div class='card shadow p-3 mb-5 bg-white rounded'>
+    <div class='col-sm-12 col-md-6 col-lg-4 bottom-margin'>
+        <div class='card shadow bg-white rounded h-100'>
             <div class='card-header'>
                 <h3>${employee.getName()}</h3>
                 <h4>${employee.getRole()}</h4>
@@ -22,7 +22,7 @@ const createEmployeeCard = employee => {
             <div class='card-body'>
                 <ul class='list-group list-group-flush'>
                     <li class='list-group-item'>ID: ${employee.getId()}</li>
-                    <li class='list-group-item'>Email: ${employee.getEmail()}</li>
+                    <li class='list-group-item'>Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a></li>
                     <li class='list-group-item'>${extraType}: ${extraValue}</li>
                 </ul>
             </div>
@@ -51,7 +51,7 @@ const makePage = employeeCards => {
         </head>
         <body>
             <header>
-                <h2>My Team</h2>
+                <h1>My Team</h1>
             </header>
             <section>
                 <div class='row'>
@@ -71,7 +71,7 @@ const generatePage = employees => {
     employees.forEach(employee => {
         employeeCards = employeeCards + createEmployeeCard(employee);
     });
-    console.log(employeeCards);
+    
     return makePage(employeeCards);
 }
 
