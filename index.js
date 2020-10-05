@@ -32,7 +32,6 @@ const addManager = () => {
         }
     ])
     .then(responses => {
-        
         return new Manager(responses.name, responses.id, responses.email, responses.officeNumber);
     });
 };
@@ -62,7 +61,7 @@ const addEngineer = () => {
         }
     ])
     .then(responses => {
-        employees.push(new Engineer(reponses.name, reponses.id, reponses.email, reponses.github));
+        return new Engineer(responses.name, responses.id, responses.email, responses.github);
     });
 };
 
@@ -91,51 +90,73 @@ const addIntern = () => {
         }
     ])
     .then(responses => {
-        employees.push(new Intern(responses.name, responses.id, responses.email, responses.school));
+        return new Intern(responses.name, responses.id, responses.email, responses.school); 
     });
 };
 
 // Add Manager
-const addEmployees = async employees => {
-    // Determine type of employee
-    if (employees.length === 0) {
-        // Add Manager        
-        addManager();
-    } else {
-        // Select a type of employee
-        return inquirer.prompt({
-            type: 'list',
-            name: 'menu',
-            message: "What is this employee's role?",
-            choices: [
-                'Engineer',
-                'Intern',
-                'Finish building my team'
-            ]
-        })
-        .then(response => {
-            if (response.menu === "Engineer") {
-                addEngineer();
-                return addEmployees(employees);
-            } else if (response.menu === "Intern") {
-                addIntern();
-                return addEmployees(employees);
-            } else {
-                // Finish adding employees
-            }
-        });
-    }
-    return employees;
+const addEmployees = employeeList => {
+    
+    // Select a type of employee
+    return inquirer.prompt({
+        type: 'list',
+        name: 'menu',
+        message: "What is this employee's role?",
+        choices: [
+            'Engineer',
+            'Intern',
+            'Finish building my team'
+        ]
+    })
+    .then(async response => {
+        if (response.menu === "Engineer") {
+            let employee = await addEngineer();
+            employees.push(employee);
+
+            return true;
+        } else if (response.menu === "Intern") {
+            let employee = await addIntern();
+            employees.push(employee);
+
+            return true;
+        } else {
+            return false;
+        }
+        // if (response.menu === "Engineer") {
+        //     new Promise((resolve, reject) => {
+        //         addEngineer();
+        //     })
+        //     .then(obj => {
+        //         resolve();
+        //     });
+
+        //     return true;
+        // } else if (response.menu === "Intern") {
+        //     employees.push(addIntern());
+        //     return true;
+        // } else {
+        //     // Finish adding employees
+        //     return false;
+        // }
+    })
+    .then(result => {
+        if (result) {
+            return addEmployees(employeeList);
+        } else {
+            return employeeList;
+        }
+    });
 }
 
 addManager()
-.then(manager => {
+.then(async manager => {
     employees.push(manager);
-    addEmployees(employees);
+    await addEmployees(employees);
+    return employees;
 })
 .then(employeeList => {
     return employeeList;
 })
 .then(employeeList => {
-    console.log(employeeList);
+    console.log(employees);
 })
