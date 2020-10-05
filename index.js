@@ -3,12 +3,19 @@ const fs = require('fs');
 const Engineer = require('./lib/Engineer');
 const Manager = require('./lib/Manager');
 const Intern = require('./lib/Intern');
+const generatePage = require('./src/page-template');
+const {writeFile, copyFile} = require('./utils/generate-site');
 
 // Array of Employees 
 let employees = [];
 
 // Add Manager
 const addManager = () => {
+    console.log(`
+    ----------------------------
+             Add Manager
+    ----------------------------
+    `)
     return inquirer.prompt([
         {
             type: 'input',
@@ -32,12 +39,19 @@ const addManager = () => {
         }
     ])
     .then(responses => {
-        return new Manager(responses.name, responses.id, responses.email, responses.officeNumber);
+        const manager = new Manager(responses.name, responses.id, responses.email, responses.officeNumber);
+        employees.push(manager);
+        return;
     });
 };
 
 // Add Engineer
 const addEngineer = () => {
+    console.log(`
+    ----------------------------
+            Add Engineer
+    ----------------------------
+    `)
     return inquirer.prompt([
         {
             type: 'input',
@@ -67,6 +81,11 @@ const addEngineer = () => {
 
 // Add Intern
 const addIntern = () => {
+    console.log(`
+    ----------------------------
+             Add Intern
+    ----------------------------
+    `)
     return inquirer.prompt([
         {
             type: 'input',
@@ -96,12 +115,16 @@ const addIntern = () => {
 
 // Add Manager
 const addEmployees = employeeList => {
-    
+    console.log(`
+    ----------------------------
+         Add New Employee
+    ----------------------------
+    `)
     // Select a type of employee
     return inquirer.prompt({
         type: 'list',
         name: 'menu',
-        message: "What is this employee's role?",
+        message: "What type of employee would you like to add?",
         choices: [
             'Engineer',
             'Intern',
@@ -122,22 +145,6 @@ const addEmployees = employeeList => {
         } else {
             return false;
         }
-        // if (response.menu === "Engineer") {
-        //     new Promise((resolve, reject) => {
-        //         addEngineer();
-        //     })
-        //     .then(obj => {
-        //         resolve();
-        //     });
-
-        //     return true;
-        // } else if (response.menu === "Intern") {
-        //     employees.push(addIntern());
-        //     return true;
-        // } else {
-        //     // Finish adding employees
-        //     return false;
-        // }
     })
     .then(result => {
         if (result) {
@@ -148,15 +155,29 @@ const addEmployees = employeeList => {
     });
 }
 
+
+//const generatePage = require('./src/page-template');
+//const {writeFile, copyFile} = require('./utils/generate-site');
+
 addManager()
-.then(async manager => {
-    employees.push(manager);
+.then(async () => {
+    // Add Employees
     await addEmployees(employees);
-    return employees;
+    return (generatePage(employees));
 })
-.then(employeeList => {
-    return employeeList;
+.then(html => {
+    // Generate HTML Document
+    return writeFile(html);
 })
-.then(employeeList => {
-    console.log(employees);
+.then(response => {
+    console.log(response);
+    return copyFile();
 })
+.then(response => {
+    //console.log(response);
+    //console.log(employees);
+    console.log('Your team profile webpage has been generated!')
+})
+.catch(err => {
+    console.log(err);
+});
