@@ -39,6 +39,7 @@ const addManager = () => {
         }
     ])
     .then(responses => {
+        // create the manager object and add to the employees array
         const manager = new Manager(responses.name, responses.id, responses.email, responses.officeNumber);
         employees.push(manager);
         return;
@@ -75,6 +76,7 @@ const addEngineer = () => {
         }
     ])
     .then(responses => {
+        // return the Engineer object
         return new Engineer(responses.name, responses.id, responses.email, responses.github);
     });
 };
@@ -86,6 +88,8 @@ const addIntern = () => {
              Add Intern
     ----------------------------
     `)
+
+    // return the result of the inquirer prompt
     return inquirer.prompt([
         {
             type: 'input',
@@ -109,6 +113,7 @@ const addIntern = () => {
         }
     ])
     .then(responses => {
+        // return the Intern object
         return new Intern(responses.name, responses.id, responses.email, responses.school); 
     });
 };
@@ -155,10 +160,7 @@ const addEmployees = employeeList => {
     });
 }
 
-
-//const generatePage = require('./src/page-template');
-//const {writeFile, copyFile} = require('./utils/generate-site');
-
+// Initiate call to addManager function
 addManager()
 .then(async () => {
     // Add Employees
@@ -174,10 +176,10 @@ addManager()
     return copyFile();
 })
 .then(response => {
-    //console.log(response);
-    //console.log(employees);
+    // inform user that the document is ready
     console.log('Your team profile webpage has been generated!')
 })
 .catch(err => {
+    // log any errors
     console.log(err);
 });
