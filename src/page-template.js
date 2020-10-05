@@ -1,5 +1,43 @@
+// create employee card
+const createEmployeeCard = employee => {
+    let extraType, extraValue = '';
+    if (employee.getRole() === "Manager") {
+        extraType = "Office Number";
+        extraValue = employee.getOffice();
+    } else if (employee.getRole() === "Engineer") {
+        extraType = "Github";
+        extraValue = `<a href='https://github.com/${employee.getGithub()}'>${employee.getGithub()}</a>`;
+    } else if (employee.getRole() === "Intern") {
+        extraType = "School";
+        extraValue = employee.getSchool();
+    }
+
+    let card = `
+    <div class='col-sm-12 col-md-6 col-lg-3 h-100'>
+        <div class='card shadow p-3 mb-5 bg-white rounded'>
+            <div class='card-header'>
+                <h3>${employee.getName()}</h3>
+                <h4>${employee.getRole()}</h4>
+            </div>
+            <div class='card-body'>
+                <ul class='list-group list-group-flush'>
+                    <li class='list-group-item'>ID: ${employee.getId()}</li>
+                    <li class='list-group-item'>Email: ${employee.getEmail()}</li>
+                    <li class='list-group-item'>${extraType}: ${extraValue}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    `;
+
+
+
+    return card;
+}
+
+
 // Generate Page
-const generatePage = employees => {
+const makePage = employeeCards => {
     return `
         <!DOCTYPE html>
         <html lang="en">
@@ -15,9 +53,26 @@ const generatePage = employees => {
             <header>
                 <h2>My Team</h2>
             </header>
+            <section>
+                <div class='row'>
+                    ${employeeCards}
+                </div>
+            </section>
         </body>
         </html>
-    `
+    `;
+}
+
+//
+const generatePage = employees => {
+    
+    let employeeCards = '';
+
+    employees.forEach(employee => {
+        employeeCards = employeeCards + createEmployeeCard(employee);
+    });
+    console.log(employeeCards);
+    return makePage(employeeCards);
 }
 
 module.exports = generatePage;
